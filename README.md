@@ -10,7 +10,7 @@ add a .env file having
 
 **MINIO_ENDPOINT** should be same as minio service name in docker compose file (so minio as default case) 
 ##### add 127.0.0.1  minio in hosts file
-where again <minio> will be same minio service name in docker compose file
+where again *minio* will be same minio service name in docker compose file
 **DATABASE_URL** should be postgress or serverless postgress db URL (NeonDB) (https://neon.tech/)
 
 WRT to docker compose file the folder structure should be
