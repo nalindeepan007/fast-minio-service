@@ -1,0 +1,53 @@
+
+services:
+
+
+  minio:
+    container_name: minio-store
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"  # pointing to minio UI console
+    volumes:
+      - minio_data:/data
+      - minio_config:/root/.minio
+    env_file: .env
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+    command: server /data --console-address ":9001"
+  
+
+  backend:
+    container_name: fast-minio-api
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+
+    volumes:
+      - ./logs/api:/logs
+    depends_on:
+      - minio
+    ports:
+      - "8080:8080"
+    env_file: .env
+
+
+  frontend:
+    container_name: fast-minio-ui
+    build:
+      dockerfile: ./Dockerfile
+      context: ../fast-minio-ui
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../fast-minio-ui:/app
+      - /app/node_modules
+    env_file: ../fast-minio-ui/.env.local
+
+volumes:
+  minio_data:
+  minio_config:
+
